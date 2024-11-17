@@ -1,3 +1,4 @@
+import { error } from 'console'
 import express, { NextFunction, Request, Response } from 'express'
 // const express = require('express')
 const app = express()
@@ -42,13 +43,6 @@ courseRouter.post("/create-course", (req: Request, res: Response) => {
 })
 
 
-
-
-
-
-
-
-
 // use query
 app.get('/', logger, (req: Request, res: Response) => {
     console.log(req.query.name);
@@ -68,6 +62,38 @@ app.post('/', logger, (req: Request, res: Response) => {
     res.json({
         message: "Successfully received data"
     })
+})
+
+// error handling using try-catch
+app.get('/error', logger, async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        res.send(something)
+    } catch (error) {
+        next(error);
+        // res.status(400).json({
+        //     success: false,
+        //     message: "failed to load"
+        // })
+    }
+});
+
+// route error handle for all method
+app.all("*", (req: Request, res: Response) => {
+    res.status(400).json({
+        success: false,
+        message: "Not found"
+    })
+})
+
+// global error handling
+app.use((error: any, req: Request, res: Response, next: NextFunction) => {
+    // console.log(error);
+    if (error) {
+        res.status(400).json({
+            success: false,
+            message: "Can not process"
+        })
+    }
 })
 
 export default app;
