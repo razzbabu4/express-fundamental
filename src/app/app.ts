@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express'
+import express, { NextFunction, Request, Response } from 'express'
 // const express = require('express')
 const app = express()
 
@@ -6,15 +6,30 @@ const app = express()
 app.use(express.json())
 app.use(express.text())
 
-app.get('/', (req: Request, res: Response) => {
+// middleware
+const logger = (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.url, req.method, req.hostname);
+    next();
+}
+
+// use query
+app.get('/', logger, (req: Request, res: Response) => {
+    console.log(req.query.name);
     res.send('Hello level-1 web developers!')
 })
 
-app.post('/', (req: Request, res: Response) => {
+// use params
+// app.get('/:userId/:subId', (req: Request, res: Response) => {
+//     console.log(req.params.subId);
+//     res.send('Hello level-1 web developers!')
+// })
+
+// use body
+app.post('/', logger, (req: Request, res: Response) => {
     console.log(req.body);
     // res.send('okay got it')
     res.json({
-        message : "Successfully received data"
+        message: "Successfully received data"
     })
 })
 
