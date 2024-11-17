@@ -14,6 +14,30 @@ const logger = (req, res, next) => {
     console.log(req.url, req.method, req.hostname);
     next();
 };
+// routers
+const userRouter = express_1.default.Router();
+const courseRouter = express_1.default.Router();
+// parser for router
+app.use('/api/v1/users', userRouter);
+app.use("/api/v1/courses", courseRouter);
+userRouter.post('/create-user', (req, res) => {
+    const user = req.body;
+    console.log(user);
+    res.json({
+        success: true,
+        message: "Successfully created user",
+        data: user
+    });
+});
+courseRouter.post("/create-course", (req, res) => {
+    const course = req.body;
+    console.log(course);
+    res.json({
+        success: true,
+        message: "Successfully created course",
+        data: course
+    });
+});
 // use query
 app.get('/', logger, (req, res) => {
     console.log(req.query.name);
